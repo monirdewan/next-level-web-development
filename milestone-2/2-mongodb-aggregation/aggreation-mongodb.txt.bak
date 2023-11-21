@@ -1,0 +1,173 @@
+//want to check execution time or more details
+db.test.find({_id:ObjectId("6406ad65fc13ae5a400000c7")}).explain("executionStats");
+
+
+//aggeration data find and show data using project
+db.test.aggregate([
+    //stage one
+    
+      {$match: {gender:"Male", age:{$lt:30}}},
+      
+      //stage two
+      
+      {$project:{name:1, age:1, gender:1}}
+    
+    ]);
+	
+	//we can use $match field many times but if we use more than one time it's take more time
+	db.test.aggregate([
+    //stage one
+    
+      {$match: {gender:"Male"}},
+      {$match:{ age:{$lt:30}}},
+      
+      //stage two
+      
+      {$project:{name:1, age:1, gender:1}}
+    
+    ]);
+	
+	
+	//aggration for add new field and create new collection and set data
+	db.test.aggregate([
+	//find data
+    {$match:{gender:"Male"}},
+	//add new field
+    {$addFields: {course:"Level-2", eduTech:"Programming Hero"}}, 
+	//sort data
+    {$project: {gender:1, course:1, eduTech:1}},
+	//create new collection and set all data
+    {$out: "course-student"}
+])
+
+//addFields and merge in same collection use
+db.test.aggregate([
+    // {$match:{gender:"Male"}},
+    {$addFields: {course:"Level-2", eduTech:"Programming Hero"}}, 
+    // {$project: {gender:1, course:1, eduTech:1}},
+    {$merge:"test"}
+]);
+
+//group data for check how witch age how many people have here
+db.test.aggregate([
+    {$group: { _id: "$age", count:{$sum:1}}}
+]);
+
+//make a document by address and how many people from that country and there name
+db.test.aggregate([
+    {$group: { _id: "$address.country", count:{$sum:1}, nameOfPeople:{$push:"$name"},}}
+])
+
+//if need full document use $$ROOT
+db.test.aggregate([
+    {$group: { _id: "$address.country", count:{$sum:1}, nameOfPeople:{$push:"$$ROOT"},}}
+]);
+
+db.test.aggregate([
+    {$group: { _id: "$address.country", count:{$sum:1}, people:{$push:"$$ROOT"}}},
+    {$project: {"people.name":1, "people.phone":1, "people.email":1}}
+]);
+
+// sum total amount in whole document with aggregate and $group and $sum
+db.test.aggregate([
+    {$group: { _id: "null", totalSalary:{$sum:"$salary"}}}
+]);
+
+//how to change variable in project and calculation in $project
+db.test.aggregate([
+    {$group: 
+    { _id: "null",
+    totalSalary:{$sum:"$salary"},
+    maxSalary:{$max:"$salary"},
+    minSalary:{$min:"$salary"},
+    avgSalary:{$avg:"$salary"}
+        
+    }},
+    
+    {$project:{
+        totalSalary:1,
+        maximumSalary:"$maxSalary",
+        minmumSalary:"$minSalary",
+        avgSalary:1,
+        rangeBetweenMaxToMinSalary:{$subtract: ["$maxSalary","$minSalary"]}
+    }}
+]);
+
+//work with array using $unwind
+db.test.aggregate([
+    {$unwind: "$friends"}, // $unwind separate every array data
+    
+    {$group: { _id: "$friends", sumOfName:{$sum: 1}}}
+]);
+
+//just find full document data average interest per age
+db.test.aggregate([
+    {$unwind: "$interests"},
+    
+    {$group: { _id: "$age", interestPerAge:{$push:"$interests"}}}
+
+]);
+
+
+//complex aggregation $bucket
+
+db.test.aggregate([
+    {$bucket: {
+         groupBy:"$age", // group by this data field
+         boundaries:[20, 40, 60, 80,100 ], // group by this number that is age data field
+         default:"80 Uporer Bura Gula", //default data out side the group or last group
+         output:{
+             count:{$sum:1}, //how many data in every group
+             karaAse:{$push: "$$ROOT"} //push all data with this group
+         }
+        }},
+        
+        {$sort:{count:-1}}, //short data by count
+        {$limit: 2}, // limit data only return 2 data
+        
+        {$project:{count:1}}
+])
+
+
+//multi pipline using $facet first need to give a name of pipline .. when we need deifferent type of data then we use it
+
+db.test.aggregate([
+    {
+        $facet: {
+            //pipline - 1
+            "friendsCount": [
+                //stage -1
+                { $unwind: "$friends" },
+
+                //stage - 2
+                { $group: { _id: "$friends", count: { $sum: 1 } } }
+            ],
+
+            //pipline -2
+            "educationCount": [
+                //stage -1
+                { $unwind: "$education" },
+                { $group: { _id: "$education", count: { $sum: 1 } } }
+            ],
+
+            //pipline 
+            "Skills": [
+                //stage-1
+                {$unwind: "$skills"},
+                //stage -2
+                {$group:{_id:"$skills", count:{$sum:1}}}
+            ]
+        }
+    }
+]);
+
+
+//lookup for join one collection to another collection
+db.orders.aggregate([
+        {$lookup: {
+               from: "test", //collection name
+               localField: "userId",
+               foreignField: "_id",
+               as: "user"
+             }}
+])

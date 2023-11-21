@@ -1,0 +1,47 @@
+//updateOne using this method only one document
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {$set: {age:80}});
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {$set: {age:50, gender:"male"}});
+
+//update data just add data with previous data in array, but don't update dublicate using $addToSet
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")},{$addToSet: {interests:"Programming"}});
+
+//update more than one data in array
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")},
+{$addToSet: {interests:{$each: ["Running", "Payring"]}}})
+
+//if want to allow dublicate data use push method
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")},{$push: {interests:{$each: ["Running", "Payring"]}}});
+
+
+//delete one field
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {$unset: {birthday: "" }});
+
+//remove data from array $pop for last data
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {$pop: {friends:1}})
+
+//remove from first data in array
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {$pop: {friends:-1}})
+
+// remove specific data using $pull
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {$pull: {friends:"Fahim Ahammed Firoz"}});
+
+//remove more than one data  from array
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {$pullAll: {interests:["Programming","Running"]}})
+
+//update object document
+db.test.updateOne({_id: ObjectId("6406ad63fc13ae5a40000065")},{$set:{
+    "address.city":"Dhaka",
+    "address.country":"Bangladesh"
+}});
+
+//update in  a array of object
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065"), "education.major":"Art"},{$set:{
+    "education.$.major":"CSE"
+}});
+
+//increment data 
+db.test.updateOne({_id:ObjectId("6406ad63fc13ae5a40000065")}, {
+    $inc:{
+        age:1
+    }
+});

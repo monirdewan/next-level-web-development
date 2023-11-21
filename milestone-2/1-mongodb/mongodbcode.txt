@@ -1,0 +1,87 @@
+
+//see data base
+show dbs
+//insert data
+db.test.insertOne({name:"Monir Khan"})
+//insert many data
+db.test.insertOne([{name:"Monir Khan"},{name:"Mamun Khan"}])
+//find one data
+db.collection name.findOne({name:"Monir"})
+//fill filtering
+ db.test.find({gender:"Male"},{name:1, email:1, phone:1})
+ 
+ //if need many data you can use this method but it's only work find
+ db.test.find({gender:"Male"}).project({name:1, phone:1})
+ 
+ //Comparison Query Operators
+ //equale result search
+  db.test.find({gender: {$eq:"Male"}})
+  db.test.find({age:{$eq:21}})
+  db.test.find({age:{$gt:21}})
+  db.test.find({age:{$lt:21}})
+  
+  //not Equel Find
+   db.test.find({age:{$ne:12}})
+   
+   //shorting by assending and dessending
+   db.test.find({age:{$gte:30}}).sort({age:1 })
+   db.test.find({age:{$gte:30}}).sort({age:-1 })
+	
+	// use $in operator and find some specific data
+	 db.test.find( {gender:"Female", age:{$in:[18, 20,22,24]}},{age:1, gender:1}).sort({age:1});
+	 
+	 //$nin Not in -- find some data without data that in notin operator
+	  db.test.find( {gender:"Female", age:{$nin:[18,20,22,24,26,28,30]}},{age:1, gender:1}).sort({age:1});
+	  
+	  //find more data using more logic
+	  db.test.find( 
+     {gender:"Female", age:{$nin:[18,20,22,24,26,28,30]},
+         interests:"Cooking"
+     },
+     {age:1, gender:1, interests:1}).sort({age:1});
+	 
+	 //use two operator in one query that call implicit and
+    db.test.find({age:{$gt:18,$lt:30}}, {age:1}).sort({age:1});
+	db.test.find({gender:"Female", age:{$gt:18,$lt:30}},  {age:1, gender:1}).sort({age:1});
+	 
+	 //Explicit $and 
+	 db.test.find({$and:[
+        {age:{$ne:15}},
+        {age:{$lt:30}},
+        {gender:"Female"}
+    ]}).sort({ age:1 }).project({age:1, gender:1})
+  
+	 
+	 //Logical Operator Or
+	 
+	 db.test.find({$or:[
+    {interests:"Writing"},
+    {interests:"Travelling"}
+    ]}).project({interests:1});
+   
+   
+  //check this data field exist or not .. use $exists
+  db.test.find({age:{$exists: true}})
+  //show document excepts this 
+  db.test.find({age:{$exists: false}})
+  
+  //find a feild data with data type useing $type
+  db.test.find({age:{$type:"string"}})
+  db.test.find({friends:{$type:"array"}},{friends:1})
+  db.test.find({company:{$type:"null"}}).project({company:1})
+  
+  //how many data ababile check work for array
+  db.test.find({friends:{$size:5}}).project({friends:1});
+  db.test.find({friends:{$size:0}}).project({friends:1});
+  
+  //find data using index of array
+  db.test.find({"interests.2":"Cooking"}).project({interests:1});
+  
+  //find data from array using $all
+  db.test.find({interests:{$all:["Cooking", "Gaming","Reading"]}}).project({interests:1});
+  
+  //find object data using $elemMatch
+  db.test.find({skills:{$elemMatch: {name:"JAVASCRIPT", level:"Intermidiate"}}}).project({skills:1});
+  
+  
+  

@@ -1,0 +1,36 @@
+1. first inital project by this command-- npm init -y
+2. install express by this command ---  npm install express
+3. install mongoose by this command -- npm install mongoose --save
+4. install typeScript by this command -- npm install typescript --save-dev
+5.install cors by this command -- npm i cors
+6. install dot env by this command -- npm i dotenv
+
+7.config typeScript by this command-- tsc -init
+8. find rootDir in typescript config file and set src folder like this : "rootDir": "./src",  
+9. find outDir in typescript config file and set dist folder like this: "outDir": "./dist",  
+10. add this script in package.json in script  "build":"tsc",
+11.copy express hellow world code and create app.ts and past code
+12.npm run build and check js file create or not
+13.create a server.ts file in src
+14.copy end of the code in app.ts app.listen and past in server.ts because it is our server code
+
+15.setup server by using mongoose quick start code ---  can copy this code from mongoose
+const mongoose = require('mongoose');
+
+async function main() {
+    await mongoose.connect('mongodb://127.0.0.1:27017/test');
+  
+    // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+  }  
+
+16.create .env file in root file
+
+17. create mongodb atlass and set it in server 
+18.. create app folder in src also create a config folder in app folder and create a index.ts in config folder
+
+
+
+
+
+
+
