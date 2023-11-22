@@ -27,8 +27,33 @@ async function main() {
 
 17. create mongodb atlass and set it in server 
 18.. create app folder in src also create a config folder in app folder and create a index.ts in config folder
+19.. and past this code in index folder
 
+import dotenv from 'dotenv';
+import path from 'path'
 
+//app url path with add .env file
+dotenv.config({path:path.join((process.cwd(), '.env'))})
+
+export default{
+    port: process.env.PORT,
+    database_url:process.env.DATABASE_URL
+}
+
+20. in app.ts file change require("express") to import express from "express"
+21.install express type declaration by this command -- npm i --save-dev @types/express
+
+22.export default app from app.ts
+
+23.app.ts file use //parser buy using this code app.use(express.json())
+24. app.ts file use app.use(cors())
+25.install cors declaration type package file by using this command:npm i --save-dev @types/cors
+
+26..setup typescript eslint prettier helping blig : https://blog.logrocket.com/linting-typescript-eslint-prettier/
+
+27. npm run lint -- this commant for check eslint error
+28.. fix eslint error by using this command : npx eslint src --fix
+29. add eslint rule from eslint rules section...
 
 
 
