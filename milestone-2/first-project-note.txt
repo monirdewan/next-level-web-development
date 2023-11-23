@@ -54,6 +54,12 @@ export default{
 27. npm run lint -- this commant for check eslint error
 28.. fix eslint error by using this command : npx eslint src --fix
 29. add eslint rule from eslint rules section...
+30..install npm i ts-node-dev --save-dev for run type script autometic
+
+31..if you use express with mongoss in that case you have to follow this process -Schema -> Model -> DB Query
+32.31..if you use express , mongoss and also typeScript in that case you have to follow this process - Interface -> Schema -> Model -> DB Query
+
+33. create a modules folder in app folder and then create your first module like student
 
 
 
